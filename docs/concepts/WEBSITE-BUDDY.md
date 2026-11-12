@@ -128,6 +128,10 @@ requirements, not aspirations:
 
 ## 8. Picking this back up
 
+Tracking issue: [#8 Website Buddy — start here](https://github.com/blackmath88/buddy/issues/8).
+Blocking: [#2 brand-voice fit](https://github.com/blackmath88/buddy/issues/2) and
+[#1 colour ramp](https://github.com/blackmath88/buddy/issues/1).
+
 Start here, in order:
 
 1. Read this document and §6.
