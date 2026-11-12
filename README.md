@@ -9,6 +9,10 @@ Research context and product-development handoff, assembled 2026-11-12 from the 
 
 This is a consolidated documentation handoff, not an application migration or a byte-for-byte archive of the source repository. Original detailed documents are linked at pinned revisions. Existing readme.txt is preserved.
 
+## Concepts
+
+- [Website Buddy — a companion for bridge-work.ai](docs/concepts/WEBSITE-BUDDY.md) — concept only; square-pixel companion. Weekend scope. Palette, naming and placement are open and blocking. **This does not answer BUDDY-0**; it is a second concept filed alongside the research material, not a decision that Buddy is this.
+
 ## Status and boundaries
 - The implementation and review originated in blackmath88/cyber-december27.
 - Findings describe the November 5 reviewed baseline, not a fresh November 12 code audit.
