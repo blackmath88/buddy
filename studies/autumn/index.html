@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Buddy — autumn visual study</title>
+<link rel="stylesheet" href="palette.css">
+</head>
+<body data-style="autumn-new-england" data-mood="dusk">
+<canvas id="stage" aria-hidden="true"></canvas>
+<main>
+<p class="eyebrow">Buddy / visual study</p>
+<h1>A little place that changes with the year.</h1>
+<p>Pixel-art scenery. Ordinary, readable words. This autumn study is the starting point for twelve monthly scenes with local weather.</p>
+<p class="notice">Preview only: November-inspired autumn artwork. No location is collected and no live weather is loaded.</p>
+<fieldset><legend>Preview lighting</legend>
+<button type="button" data-mood-btn="dusk" aria-pressed="true">Dusk</button>
+<button type="button" data-mood-btn="golden" aria-pressed="false">Golden</button>
+<button type="button" data-mood-btn="night" aria-pressed="false">Night</button>
+</fieldset>
+<button type="button" id="still" aria-pressed="false">Pause animation</button>
+<p id="status" role="status">Autumn artwork preview</p>
+<noscript><p>The text remains available without JavaScript. The animated landscape needs JavaScript.</p></noscript>
+<p><a href="../../docs/SEASONAL-WEBSITE-CONCEPT.md">Concept and implementation plan</a></p>
+</main>
+<script src="scene.js"></script>
+</body>
+</html>

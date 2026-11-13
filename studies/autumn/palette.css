@@ -1,0 +1,13 @@
+/* Adapted study tokens from library-ui PR #1; see docs/PIXEL-ART-SOURCES.md. */
+[data-style="autumn-new-england"]{
+ --gu-bg:#241612;--gu-panel:#fdf3e0;--gu-ink:#1c120c;
+ --gu-sky-1:#fdf3e0;--gu-sky-2:#f2b25c;--gu-sky-3:#d96f32;--gu-sky-4:#8e2f2a;--gu-sky-5:#33201d;
+ --gu-sun:#ffe9b0;--gu-sun-core:#fff7dd;--gu-star:#fdf3e0;
+ --gu-hill-far:#7a322b;--gu-hill-near:#33201d;
+ --gu-tree-1:#8e2f2a;--gu-tree-2:#c25a2a;--gu-tree-3:#e0a03c;--gu-tree-4:#f2c14e;
+ --gu-trunk:#1c120c;--gu-bridge:#1c120c;--gu-bridge-lit:#f2c14e;--gu-ground:#1c120c;
+ --gu-leaf-0:#1c120c;--gu-leaf-1:#8e2f2a;--gu-leaf-2:#d96f32;--gu-leaf-3:#f2c14e;--gu-leaf-4:#fdf3e0;
+}
+[data-mood="golden"]{--gu-bg:#3a2418;--gu-sky-1:#fff6da;--gu-sky-2:#f7c948;--gu-sky-3:#e8963c;--gu-sky-4:#b65c2e;--gu-sky-5:#5a3524;--gu-sun:#fff3c4;--gu-sun-core:#ffffff;--gu-hill-far:#8a4a2c;--gu-hill-near:#4a2c1e}
+[data-mood="night"]{--gu-bg:#141021;--gu-sky-1:#2c2440;--gu-sky-2:#3c2f52;--gu-sky-3:#4a2f4a;--gu-sky-4:#241c33;--gu-sky-5:#141021;--gu-sun:#e8e4f5;--gu-sun-core:#ffffff;--gu-hill-far:#241c33;--gu-hill-near:#181226;--gu-tree-1:#241c33;--gu-tree-2:#33253f;--gu-tree-3:#4a3450;--gu-tree-4:#6b4a5e;--gu-trunk:#0d0a16;--gu-bridge:#0d0a16;--gu-ground:#0d0a16;--gu-leaf-0:#0d0a16;--gu-leaf-1:#5e3040;--gu-leaf-2:#a34a3a;--gu-leaf-3:#e0a03c;--gu-leaf-4:#f2d98c}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--gu-bg);color:var(--gu-ink);font:1rem/1.6 system-ui,sans-serif}#stage{position:fixed;inset:0;width:100%;height:100%;image-rendering:pixelated;pointer-events:none}main{position:relative;margin:clamp(1rem,5vw,5rem);padding:clamp(1.25rem,3vw,2rem);max-width:35rem;background:var(--gu-panel);border:2px solid var(--gu-ink)}h1{font-size:clamp(1.8rem,4vw,2.8rem);line-height:1.15}.eyebrow{font-size:.85rem;letter-spacing:.08em;text-transform:uppercase}.notice{border-left:3px solid var(--gu-ink);padding-left:.8rem}fieldset{margin:1rem 0;padding:.75rem}button{font:inherit;color:var(--gu-ink);background:var(--gu-panel);border:2px solid var(--gu-ink);padding:.5rem .8rem;margin:.25rem;cursor:pointer}button[aria-pressed=true]{background:var(--gu-ink);color:var(--gu-panel)}a{color:inherit}button:focus-visible,a:focus-visible{outline:3px solid var(--gu-ink);outline-offset:3px}#status{font-size:.85rem}@media(max-width:480px){main{margin:1rem}}
