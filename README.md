@@ -1,20 +1,47 @@
-# Buddy
+# Buddy Design Lab
 
-Research context and product-development handoff, assembled 2026-11-12 from the Cyber December research-IDE discussion. Buddy's final product identity is not decided by this import.
+A runnable local gallery of six original companions, twelve illustrated studies and four rendering methods. Readable HTML surrounds code-drawn scenery. No accounts, live weather, location, telemetry, runtime services or external fonts.
 
-## Start here
-1. [Context, concept and independent review](docs/research/CONTEXT.md)
-2. [Next build plan and Claude handoff](docs/research/BUILD-PLAN.md)
-3. [Sources, design references and reuse boundaries](docs/research/RESOURCES.md)
+## Run
 
-This is a consolidated documentation handoff, not an application migration or a byte-for-byte archive of the source repository. Original detailed documents are linked at pinned revisions. Existing readme.txt is preserved.
+Node 22.12+ (verified with Node 24.22.1) and npm:
 
-## Status and boundaries
-- The implementation and review originated in blackmath88/cyber-december27.
-- Findings describe the November 5 reviewed baseline, not a fresh November 12 code audit.
-- This import runs no tests, implements no fixes and deploys nothing.
-- Source code, assets and third-party packages are not copied here.
-- No personal journal exports, credentials, private source bodies or runtime data belong in this public research package.
-- Do not assume Buddy has the same application, domain or deployment as Cyber December. Decide product scope and inspect actual code before implementation.
+```sh
+npm ci
+npm run dev
+```
 
-The useful next step is to choose whether Buddy is a research home, an extracted reusable workspace, or a separate application. No choice is silently made by importing this material.
+Open the local URL printed by Vite. For production output: `npm run build`, then `npm run preview`. Output in `dist/` includes the preserved `studies/autumn/` reference and documentation. Hash routes and relative assets support a hosting base path.
+
+## Explore
+
+- `#/studies`: gallery and featured autumn bridge; `#/studies/autumn-bridge` opens controls.
+- `#/buddies`: six character/palette/action sheets; `#/buddies/lumen` opens a companion.
+- `#/techniques`: four executable renderers, atlas/frame inspector, two fidelity triptychs.
+- `#/mix`: constrained local mixer, favourites, recipe JSON interchange and atlas PNG export.
+- `#/compare`: two synchronized specimens; technique/fidelity can deliberately differ.
+- `studies/autumn/index.html`: unchanged historical donor-derived study, separate provenance.
+
+Three studies have twelve-month structural variation: the bridge reference landscape, tea shelter and solar terrace. Other studies disclose fixed seasonal art and disable month selection. Weather is always mocked. Unsupported weather, incompatible Lumen placements and orbital palettes are disabled with explanations.
+
+## Verify and capture
+
+```sh
+npm run typecheck
+npm test
+npm run build
+# On a normal development machine, install the test browser once:
+npx playwright install chromium
+npm run test:browser
+# Test the built app mounted at /buddy/ instead of the dev server:
+LAB_PRODUCTION=1 npm run test:browser
+npm run capture
+# Optional contact-sheet composition; Python with Pillow required:
+python3 scripts/contact-sheets.py
+```
+
+In this managed Linux environment, the browser was already installed; use `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium` before browser commands. The test harness starts and stops its own local server. `LAB_URL` can instead target an existing local test server, with a trailing slash if mounted under a path. `LAB_PRODUCTION=1 npm run capture` captures the built app.
+
+**Observed:** clean install, typecheck, 126 unit tests and 8 browser scenarios pass, including the production `/buddy/` mount. See [BUILD-STATUS](docs/BUILD-STATUS.md) for scope and verification limits, [real captures](artifacts/), [design decisions](docs/DESIGN-DECISIONS.md) and [provenance](docs/SOURCE-MANIFEST.md).
+
+This is an illustrated implementation prototype, not professional commissioned pixel art or owner-accepted artwork. Canvas methods rasterize original local shapes; SVG cutout stays vector. No deployment or merge has been performed. The historical research-IDE imports remain in [docs/research](docs/research/).
