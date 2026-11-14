@@ -6,7 +6,7 @@ import {
   svgShapes,
   weatherShapes,
 } from "./art";
-import { shouldRun, type Recipe } from "./model";
+import { deriveScene, shouldRun, type Recipe } from "./model";
 
 export interface RenderStats {
   active: number;
@@ -47,12 +47,20 @@ export class SharedClock {
       throw Error("Maximum two active specimen renderers.");
     this.members.add(member);
     stats.active = this.members.size;
+    stats.particles = [...this.members].map(
+      (m) =>
+        deriveScene(m.recipe.month, m.recipe.weather, m.recipe.seed).particles,
+    );
     member.render(this.time);
     this.schedule();
   }
   remove(member: Specimen) {
     this.members.delete(member);
     stats.active = this.members.size;
+    stats.particles = [...this.members].map(
+      (m) =>
+        deriveScene(m.recipe.month, m.recipe.weather, m.recipe.seed).particles,
+    );
     this.schedule();
   }
   private tick = (now: number) => {
@@ -91,6 +99,10 @@ export class SharedClock {
     this.schedule();
   }
   refresh() {
+    stats.particles = [...this.members].map(
+      (m) =>
+        deriveScene(m.recipe.month, m.recipe.weather, m.recipe.seed).particles,
+    );
     this.schedule();
   }
   get isReduced() {
@@ -168,6 +180,7 @@ export class Specimen {
   private weather?: SVGGElement;
   private atlas?: Atlas;
   private disposed = false;
+  private registered = false;
   private lastPose = -1;
   constructor(
     private host: HTMLElement,
@@ -179,6 +192,7 @@ export class Specimen {
     try {
       this.initialize();
       clock.add(this);
+      this.registered = true;
     } catch {
       host.innerHTML =
         '<div class="canvas-fallback"><strong>This specimen needs a drawing surface.</strong><p>The HTML catalogue, controls and recipe export still work. Try a browser with Canvas2D enabled.</p></div>';
@@ -307,14 +321,29 @@ export class Specimen {
     this.canvas = undefined;
     this.ctx = undefined;
     this.svg = undefined;
-    this.initialize();
-    this.render(this.clock.time);
-    this.clock.refresh();
+    try {
+      this.initialize();
+      if (!this.registered) {
+        this.clock.add(this);
+        this.registered = true;
+      } else {
+        this.render(this.clock.time);
+        this.clock.refresh();
+      }
+    } catch {
+      if (this.registered) {
+        this.clock.remove(this);
+        this.registered = false;
+      }
+      this.host.innerHTML =
+        '<div class="canvas-fallback"><strong>This specimen needs a drawing surface.</strong><p>The HTML controls and recipe export still work. Try SVG cutout or a browser with Canvas2D enabled.</p></div>';
+    }
   }
   dispose() {
     if (this.disposed) return;
     this.disposed = true;
-    this.clock.remove(this);
+    if (this.registered) this.clock.remove(this);
+    this.registered = false;
     this.host.replaceChildren();
     this.atlas = undefined;
     this.bg = undefined;

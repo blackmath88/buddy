@@ -252,7 +252,15 @@ export function landscape(recipe: Recipe): Shape[] {
     const t = (y / 180) * 3,
       i = Math.min(2, Math.floor(t)),
       f = t - i;
-    p.rect(0, y, 480, 3, mix(sky[i], sky[i + 1], f));
+    p.rect(
+      0,
+      y,
+      480,
+      3,
+      detail === 0
+        ? sky[Math.min(3, Math.floor(y / 45))]
+        : mix(sky[i], sky[i + 1], f),
+    );
     if (detail > 0 && y % 12 === 0)
       for (let x = 0; x < 480; x += 8) p.rect(x + (y % 8), y, 2, 1, sky[i + 1]);
   }
@@ -839,6 +847,19 @@ export function weatherShapes(recipe: Recipe, time: number): Shape[] {
     const z = 0.4 + r() * 0.6,
       x = ((r() * 540 + t * c.wind * z) % 540) - 30,
       y = ((r() * 300 + t * (c.weather === "snow" ? 15 : 65) * z) % 300) - 15;
+    const world = byStudy(recipe.study)!.world;
+    if (
+      world === "window" &&
+      (x < 74 ||
+        x > 406 ||
+        y < 29 ||
+        y > 205 ||
+        (x > 234 && x < 241) ||
+        (y > 92 && y < 98))
+    )
+      continue;
+    if (world === "shelter" && x > 145 && x < 383 && y > 137 && y < 222)
+      continue;
     if (
       ["rain", "storm", "mixed"].includes(c.weather) &&
       (c.weather !== "mixed" || i % 2 === 0)

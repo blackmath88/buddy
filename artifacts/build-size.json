@@ -1,0 +1,22 @@
+{
+  "files": [
+    {
+      "path": "dist/index.html",
+      "bytes": 2361,
+      "gzipBytes": 1003
+    },
+    {
+      "path": "dist/assets/index-DUrGuCGk.css",
+      "bytes": 13783,
+      "gzipBytes": 3940
+    },
+    {
+      "path": "dist/assets/index-DjRXl1sc.js",
+      "bytes": 62393,
+      "gzipBytes": 22987
+    }
+  ],
+  "totalBytes": 78537,
+  "runtimePackages": 0,
+  "note": "Built app files only; preserved autumn reference and copied documentation are separate, not requested on initial Lab load."
+}

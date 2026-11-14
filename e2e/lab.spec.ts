@@ -37,18 +37,18 @@ test("all studies open, gallery is static, all routes are local", async ({
     )
       thirdParty.push(r.url());
   });
-  await page.goto("/");
+  await page.goto("./");
   await expect(page.locator(".cards").first().locator(".card")).toHaveCount(12);
   expect((await snapshot(page)).stats.active).toBe(1);
   await expect(page.locator("#study-cards canvas")).toHaveCount(0);
   for (const id of ids) {
-    await page.goto("/#/studies/" + id);
+    await page.goto("./#/studies/" + id);
     await expect(page.locator(".stage canvas,.stage svg")).toHaveCount(1);
     await expect(page.locator("h1")).toBeVisible();
     expect((await snapshot(page)).stats.active).toBe(1);
   }
   for (const route of ["buddies", "techniques", "mix", "compare"]) {
-    await page.goto("/#/" + route);
+    await page.goto("./#/" + route);
     await expect(page.locator("h1")).toBeVisible();
     expect((await snapshot(page)).stats.active).toBeLessThanOrEqual(2);
   }
@@ -57,7 +57,7 @@ test("all studies open, gallery is static, all routes are local", async ({
 test("six buddies × five actions across all executable techniques", async ({
   page,
 }) => {
-  await page.goto("/#/mix");
+  await page.goto("./#/mix");
   for (const buddy of ["sprig", "ember", "pip", "sola", "mote", "lumen"]) {
     await page.locator("[data-key=buddy]").selectOption(buddy);
     for (const action of [
@@ -79,7 +79,7 @@ test("six buddies × five actions across all executable techniques", async ({
       page.locator(technique === "cutout" ? ".stage svg" : ".stage canvas"),
     ).toHaveCount(1);
   }
-  await page.goto("/#/techniques");
+  await page.goto("./#/techniques");
   await expect(page.locator("#atlas-host canvas")).toHaveAttribute(
     "width",
     "768",
@@ -93,7 +93,7 @@ test("six buddies × five actions across all executable techniques", async ({
 test("comparison shares inputs and clock, explains differences, resets", async ({
   page,
 }) => {
-  await page.goto("/#/compare");
+  await page.goto("./#/compare");
   const a = page.locator("#controls-a"),
     b = page.locator("#controls-b");
   await a.locator("[data-key=weather]").selectOption("snow");
@@ -117,7 +117,7 @@ test("comparison shares inputs and clock, explains differences, resets", async (
 test("pause, visibility, reduced motion and route disposal stop scheduling", async ({
   page,
 }) => {
-  await page.goto("/#/compare");
+  await page.goto("./#/compare");
   await page
     .getByRole("button", { name: "Pause animation", exact: true })
     .click();
@@ -176,7 +176,7 @@ test("pause, visibility, reduced motion and route disposal stop scheduling", asy
 test("imports are atomic, favourites persist and reset does not erase", async ({
   page,
 }) => {
-  await page.goto("/#/mix");
+  await page.goto("./#/mix");
   await page.getByRole("button", { name: "Save favourite" }).click();
   await expect(page.locator("#favourites button")).toHaveCount(1);
   const before = (await snapshot(page)).recipes[0];
@@ -209,7 +209,7 @@ test("denied and corrupt storage remain usable; incompatible choices explain why
       },
     });
   });
-  await page.goto("/#/mix/winter-window");
+  await page.goto("./#/mix/winter-window");
   await expect(page.locator("[data-key=month]")).toBeDisabled();
   await expect(
     page.locator("[data-key=buddy] option[value=lumen]"),
@@ -227,7 +227,7 @@ test("portrait, zoom, keyboard, no-JS and canvas fallback", async ({
   browser,
 }) => {
   await page.setViewportSize({ width: 360, height: 800 });
-  await page.goto("/#/compare");
+  await page.goto("./#/compare");
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
@@ -237,8 +237,9 @@ test("portrait, zoom, keyboard, no-JS and canvas fallback", async ({
   expect((await boxes[1].boundingBox())!.y).toBeGreaterThan(
     (await boxes[0].boundingBox())!.y,
   );
-  await page.goto("/#/mix");
-  await page.evaluate(() => (document.documentElement.style.fontSize = "200%"));
+  await page.goto("./#/mix");
+  await page.setViewportSize({ width: 720, height: 900 });
+  await page.evaluate(() => (document.body.style.zoom = "2"));
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
@@ -248,7 +249,7 @@ test("portrait, zoom, keyboard, no-JS and canvas fallback", async ({
   await expect(page.locator(":focus")).toBeVisible();
   const nojs = await browser.newContext({ javaScriptEnabled: false });
   const p = await nojs.newPage();
-  await p.goto("/");
+  await p.goto("./");
   await expect(p.getByRole("heading", { level: 1 })).toBeVisible();
   await expect(p.locator("noscript")).toBeVisible();
   await nojs.close();
@@ -258,8 +259,16 @@ test("portrait, zoom, keyboard, no-JS and canvas fallback", async ({
       null) as typeof HTMLCanvasElement.prototype.getContext;
   });
   const f = await failed.newPage();
-  await f.goto("/#/studies/autumn-bridge");
+  await f.goto("./#/studies/autumn-bridge");
   await expect(f.locator(".canvas-fallback")).toBeVisible();
   await expect(f.locator("h1")).toBeVisible();
+  const failedErrors: string[] = [];
+  f.on("pageerror", (e) => failedErrors.push(e.message));
+  await f.locator("[data-key=action]").selectOption("curious");
+  await expect(f.locator(".canvas-fallback")).toBeVisible();
+  await f.locator("[data-key=technique]").selectOption("cutout");
+  await expect(f.locator(".stage svg")).toBeVisible();
+  await expect.poll(async () => (await snapshot(f)).stats.active).toBe(1);
+  expect(failedErrors).toEqual([]);
   await failed.close();
 });

@@ -1044,3 +1044,24 @@ footer > a:last-child {
     animation: none !important;
   }
 }
+
+.arrow {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-top: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+  position: relative;
+  margin: 0 2px 0 5px;
+  vertical-align: middle;
+}
+.arrow:after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  border-top: 1px solid currentColor;
+  transform: rotate(-45deg);
+  transform-origin: right;
+  right: 0;
+  top: -1px;
+}

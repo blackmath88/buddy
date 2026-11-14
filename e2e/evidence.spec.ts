@@ -10,7 +10,7 @@ test("capture actual specimens, contact-sheet inputs and named-environment timin
   await mkdir(dir + "/buddies", { recursive: true });
   await mkdir(dir + "/techniques", { recursive: true });
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/");
+  await page.goto("./");
   await expect(page.locator("#study-cards .card")).toHaveCount(12);
   await page.screenshot({ path: dir + "/gallery.png", fullPage: true });
   const ids = [
@@ -28,13 +28,13 @@ test("capture actual specimens, contact-sheet inputs and named-environment timin
     "moonlit-dock",
   ];
   for (const id of ids) {
-    await page.goto("/#/studies/" + id);
+    await page.goto("./#/studies/" + id);
     await expect(page.locator(".stage canvas,.stage svg")).toHaveCount(1);
     await page
       .locator(".stage")
       .screenshot({ path: `${dir}/studies/${id}.png` });
   }
-  await page.goto("/#/buddies");
+  await page.goto("./#/buddies");
   for (let i = 0; i < 6; i++)
     await page
       .locator(".buddy-card")
@@ -42,7 +42,7 @@ test("capture actual specimens, contact-sheet inputs and named-environment timin
       .screenshot({
         path: `${dir}/buddies/${["sprig", "ember", "pip", "sola", "mote", "lumen"][i]}.png`,
       });
-  await page.goto("/#/techniques");
+  await page.goto("./#/techniques");
   for (let i = 0; i < 2; i++)
     await page
       .locator(".triptych")
@@ -59,7 +59,7 @@ test("capture actual specimens, contact-sheet inputs and named-environment timin
       .locator(".stage")
       .screenshot({ path: `${dir}/techniques/${technique}.png` });
   }
-  await page.goto("/#/mix/solar-terrace");
+  await page.goto("./#/mix/solar-terrace");
   await page.screenshot({ path: dir + "/mixer.png", fullPage: true });
   for (const [label, month, weather, night] of [
     ["spring-mixed", "4", "mixed", false],
@@ -71,15 +71,27 @@ test("capture actual specimens, contact-sheet inputs and named-environment timin
     await page.locator("[data-key=night]").setChecked(night);
     await page.locator(".stage").screenshot({ path: `${dir}/${label}.png` });
   }
-  await page.goto("/#/compare");
+  await page.goto("./#/compare");
   await page.screenshot({ path: dir + "/comparison.png", fullPage: true });
   await page.setViewportSize({ width: 360, height: 800 });
-  await page.goto("/#/mix");
+  await page.goto("./#/mix");
   await page.screenshot({ path: dir + "/portrait.png", fullPage: true });
   // Named environment, bounded sampling; no fabricated FPS or universal-device claims.
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.emulateMedia({ reducedMotion: "no-preference" });
-  await page.goto("/#/compare");
+  await page.goto("./#/compare");
+  const resume = page.getByRole("button", {
+    name: "Resume animation",
+    exact: true,
+  });
+  if (await resume.count()) await resume.click();
+  await expect
+    .poll(async () =>
+      page.evaluate(
+        () => (window as any).__buddyLab.snapshot().stats.scheduled,
+      ),
+    )
+    .toBe(true);
   const measurements = await page.evaluate(async () => {
     const lab = (window as any).__buddyLab;
     const start = lab.snapshot();
@@ -113,6 +125,23 @@ test("capture actual specimens, contact-sheet inputs and named-environment timin
       ]),
       note: "Headless Chromium in managed Linux container; frame intervals include browser scheduling and shared renderer work. Not universal FPS or mobile performance.",
     };
+  });
+  expect(
+    measurements.end.stats.draws - measurements.start.stats.draws,
+  ).toBeGreaterThan(100);
+  expect(measurements.end.manual).toBe(false);
+  await mkdir(dir + "/atlases", { recursive: true });
+  for (const id of ["sprig", "ember", "pip", "sola", "mote", "lumen"]) {
+    await page.goto("./#/mix/" + id);
+    const downloaded = page.waitForEvent("download");
+    await page.getByRole("button", { name: "Export atlas PNG" }).click();
+    await (await downloaded).saveAs(`${dir}/atlases/${id}.png`);
+  }
+  await page.goto("./studies/autumn/index.html");
+  await page.locator("#still").click();
+  await page.screenshot({
+    path: dir + "/original-autumn-reference.png",
+    fullPage: true,
   });
   await writeFile(
     dir + "/performance.json",

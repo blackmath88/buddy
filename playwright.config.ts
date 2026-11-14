@@ -1,4 +1,8 @@
 import { defineConfig } from "@playwright/test";
+const built = process.env.LAB_PRODUCTION === "1";
+const baseURL =
+  process.env.LAB_URL ??
+  (built ? "http://localhost:5173/buddy/" : "http://localhost:5173/");
 export default defineConfig({
   testDir: "./e2e",
   timeout: 60000,
@@ -11,12 +15,14 @@ export default defineConfig({
   webServer: process.env.LAB_URL
     ? undefined
     : {
-        command: "npm run dev -- --port 5173 --strictPort",
-        url: "http://localhost:5173",
+        command: built
+          ? "node scripts/serve-built.mjs"
+          : "npm run dev -- --port 5173 --strictPort",
+        url: baseURL,
         reuseExistingServer: false,
       },
   use: {
-    baseURL: process.env.LAB_URL ?? "http://localhost:5173",
+    baseURL,
     headless: true,
     viewport: { width: 1440, height: 1000 },
     launchOptions: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH

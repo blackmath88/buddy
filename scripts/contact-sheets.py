@@ -2,7 +2,8 @@
 from PIL import Image, ImageDraw, ImageFont
 from pathlib import Path
 root=Path('artifacts')
-font=ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',14)
+try: font=ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',14)
+except OSError: font=ImageFont.load_default()
 def sheet(files,output,columns,width=480):
     height=300
     out=Image.new('RGB',(columns*width,((len(files)+columns-1)//columns)*height),'#f5f3ea')

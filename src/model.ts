@@ -51,12 +51,15 @@ export const preset = (id = "autumn-bridge"): Recipe => {
     seed: 2187,
   };
 };
-export const seeded = (seed: number) => () => {
-  seed |= 0;
-  seed = (seed + 0x6d2b79f5) | 0;
-  let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+// Local xorshift32 generator. Zero input gets a nonzero internal state.
+export const seeded = (seed: number) => {
+  let state = Math.trunc(seed) >>> 0 || 0x9e3779b9;
+  return () => {
+    state ^= state << 13;
+    state ^= state >>> 17;
+    state ^= state << 5;
+    return (state >>> 0) / 0x100000000;
+  };
 };
 export function compatible(recipe: Recipe): string | null {
   const s = byStudy(recipe.study);
