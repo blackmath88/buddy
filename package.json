@@ -1,0 +1,22 @@
+{
+  "name": "buddy-design-lab",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc --noEmit && vite build && node scripts/copy-reference.mjs",
+    "preview": "vite preview --host 0.0.0.0",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run test/",
+    "test:browser": "playwright test",
+    "capture": "node scripts/capture.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1",
+    "prettier": "^3.6.2",
+    "typescript": "5.9.3",
+    "vite": "7.2.2",
+    "vitest": "4.0.9"
+  }
+}
