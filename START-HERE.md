@@ -7,6 +7,7 @@
 - [Copy-paste implementation, continuation and review prompts](docs/AGENT-HANDOVERS.md)
 - [Website concept](docs/SEASONAL-WEBSITE-CONCEPT.md)
 - [Autumn study](studies/autumn/index.html): open directly in a browser.
+- [Menagerie study](studies/menagerie/README.md): pixel critters that walk on the page. Text-grid sprites, rule-based shading, mosaic cards. A worked example from the MCP Lab, not part of the seasonal plan.
 - [Port provenance and resources](docs/PIXEL-ART-SOURCES.md)
 
 The first implementation assignment is Slice A: a running twelve-month scene playground with mocked weather, normal HTML content, tests and real screenshots. Do not deliver only another plan.
